@@ -1,0 +1,27 @@
+# Python
+backend/venv/
+__pycache__/
+*.pyc
+
+# Environment Variables
+backend/.env
+
+# ChromaDB
+backend/chroma_db/
+
+# Uploaded PDFs
+backend/uploads/
+
+# Logs
+*.log
+
+# VS Code
+.vscode/
+
+# Next.js
+frontend/.next/
+frontend/node_modules/
+
+# OS Files
+.DS_Store
+Thumbs.db
