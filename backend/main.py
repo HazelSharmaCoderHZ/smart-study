@@ -1,11 +1,26 @@
 from fastapi import FastAPI
-from app.config.database import client
-from app.routes.auth import router as auth_router
-from app.routes import chat
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(
     title="Smart Study Companion API",
     version="1.0.0"
 )
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+from app.config.database import client
+from app.routes.auth import router as auth_router
+from app.routes import chat
 app.include_router(
     chat.router,
     prefix="/api/chat",
