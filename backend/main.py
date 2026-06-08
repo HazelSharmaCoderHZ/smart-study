@@ -1,12 +1,16 @@
 from fastapi import FastAPI
 from app.config.database import client
 from app.routes.auth import router as auth_router
-
+from app.routes import chat
 app = FastAPI(
     title="Smart Study Companion API",
     version="1.0.0"
 )
-
+app.include_router(
+    chat.router,
+    prefix="/api/chat",
+    tags=["Chat"]
+)
 app.include_router(auth_router)
 from app.routes.pdf import router as pdf_router
 app.include_router(pdf_router, prefix="/api/pdf", tags=["PDF"])
