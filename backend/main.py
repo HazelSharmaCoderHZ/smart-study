@@ -8,7 +8,8 @@ app = FastAPI(
 )
 
 app.include_router(auth_router)
-
+from app.routes.pdf import router as pdf_router
+app.include_router(pdf_router, prefix="/api/pdf", tags=["PDF"])
 
 @app.get("/")
 def home():

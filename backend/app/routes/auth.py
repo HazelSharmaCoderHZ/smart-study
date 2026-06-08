@@ -103,6 +103,21 @@ def login(user: UserLogin):
     if not existing_user["is_verified"]:
         raise HTTPException(status_code=401, detail="Please verify your email first")
 
+        print("EMAIL:", user.email)
+        print("INPUT PASSWORD:", user.password)
+        print("INPUT PASSWORD LENGTH:", len(user.password))
+
+        print("STORED HASH:", existing_user["password"])
+        print("HASH LENGTH:", len(existing_user["password"]))
+
+
+    print("=" * 50)
+    print("EMAIL:", user.email)
+    print("PASSWORD INPUT:", user.password)
+    print("PASSWORD INPUT LENGTH:", len(user.password))
+    print("HASH FROM DB:", existing_user["password"])
+    print("HASH LENGTH:", len(existing_user["password"]))
+    print("=" * 50)
     if not verify_password(user.password, existing_user["password"]):
         raise HTTPException(status_code=401, detail="Invalid password")
 
@@ -114,3 +129,22 @@ def login(user: UserLogin):
 @router.get("/profile")
 def profile(current_user=Depends(get_current_user)):
     return {"user": current_user}
+
+
+
+@router.get("/test-password")
+def test_password():
+
+    from app.utils.password import hash_password, verify_password
+
+    hashed = hash_password("12345678")
+
+    result = verify_password(
+        "12345678",
+        hashed
+    )
+
+    return {
+        "hash": hashed,
+        "verified": result
+    }
