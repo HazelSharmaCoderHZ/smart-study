@@ -2,13 +2,13 @@ from app.config.chroma import collection
 from app.utils.embeddings import get_embedding
 
 def store_chunks(chunks, filename, user_id):
-
+    print("STORING USER:", repr(user_id))
     for idx, chunk in enumerate(chunks):
 
         embedding = get_embedding(chunk)
 
         collection.add(
-            ids=[f"{filename}_{idx}"],
+            ids=[f"{user_id}_{filename}_{idx}"],
             embeddings=[embedding],
             documents=[chunk],
             metadatas=[{

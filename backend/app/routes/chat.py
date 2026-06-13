@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-
+from app.config.chroma import collection
 from app.models.chat import AskRequest
 from app.services.rag_service import retrieve_context
 from app.services.gemini_service import generate_answer
@@ -16,7 +16,12 @@ router = APIRouter()
 
 router = APIRouter()
 
-
+@router.get("/whoami")
+def whoami(
+    current_user=Depends(get_current_user)
+):
+    return current_user
+    
 @router.get("/test-rag")
 def test_rag(
     question: str,
@@ -71,3 +76,15 @@ def chat_history(
     )
 
     return chats
+
+@router.get("/debug-chroma")
+def debug_chroma():
+    return collection.get()
+
+@router.get("/debug-user")
+def debug_user(
+    current_user=Depends(get_current_user)
+):
+    return {
+        "email": current_user["email"]
+    }
