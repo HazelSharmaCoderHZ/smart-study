@@ -21,3 +21,35 @@ export const uploadPdf = async (
 
   return response.data;
 };
+
+export const getMyPdfs = async (
+  token: string
+) => {
+  const response = await api.get(
+    "/api/pdf/my-pdfs",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+
+export const deletePdf = async (
+  filename: string,
+  token: string
+) => {
+  const response = await api.delete(
+    `/api/pdf/delete-pdf/${filename}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};

@@ -34,3 +34,19 @@ export const getHistory = async (
 
   return response.data;
 };
+
+
+export const getChatHistory = async (
+  token: string
+) => {
+  const response = await api.get(
+    "/api/chat/history",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};

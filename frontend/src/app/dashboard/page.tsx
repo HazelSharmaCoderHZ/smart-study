@@ -13,9 +13,8 @@ import {
   User,
 } from "lucide-react";
 
-
+import ToolCard from "@/components/dashboard/ToolCard";
 import Sidebar from "@/components/layout/Sidebar";
-import QuickActions from "@/components/dashboard/QuickActions";
 
 export default function DashboardPage() {
   return (
@@ -31,10 +30,62 @@ export default function DashboardPage() {
           </h1>
 
           <p className="mt-3 opacity-70">
-            What would you like to do today?
+            Ready to learn something new today?
           </p>
 
-          <QuickActions />
+          
+
+          <div className="mt-10">
+            <h2 className="text-2xl font-semibold mb-6">
+              Study Tools
+            </h2>
+
+            <div className="grid md:grid-cols-3 gap-6">
+
+              <ToolCard
+                title="My PDFs"
+                icon={<FileText size={28} />}
+                description="View uploaded PDFs"
+                href="/my-pdfs"
+              />
+
+              <ToolCard
+                title="AI Chat"
+                icon={<MessageSquare size={28} />}
+                description="Chat with your documents"
+                href="/chat"
+              />
+
+              <ToolCard
+                title="Notes"
+                icon={<NotebookPen size={28} />}
+                description="Generate smart notes"
+                href="/notes"
+              />
+
+              <ToolCard
+                title="Quiz"
+                icon={<Brain size={28} />}
+                description="Generate quizzes"
+                href="/quiz"
+              />
+
+              <ToolCard
+                title="Mock Tests"
+                icon={<ClipboardCheck size={28} />}
+                description="Practice exams"
+                href="/mock-tests"
+              />
+
+              <ToolCard
+                title="History"
+                icon={<History size={28} />}
+                description="View past chats"
+                href="/history"
+              />
+
+            </div>
+          </div>
 
         </section>
 

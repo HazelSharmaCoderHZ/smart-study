@@ -58,6 +58,7 @@ async def upload_pdf(
 
 from app.utils.embeddings import get_embedding
 
+
 @router.get("/test-search")
 def test_search(
     current_user=Depends(get_current_user)
@@ -67,18 +68,12 @@ def test_search(
         "What is DBMS?"
     )
 
-    results = collection.query(
-        query_embeddings=[query_embedding],
-        n_results=3,
-        where={
-            "user_id": current_user["email"]
-        }
-    )
+    
 
-    return results
+    
 
     query_embedding = get_embedding("What is DBMS?")
-
+    user_id = current_user["email"]
     results = collection.query(
         query_embeddings=[query_embedding],
         n_results=3,
@@ -93,4 +88,50 @@ from app.config.chroma import collection
 def count_docs():
     return {
         "count": collection.count()
+    }
+
+
+@router.get("/my-pdfs")
+async def get_my_pdfs(
+    current_user=Depends(get_current_user)
+):
+    user_email = current_user["email"]
+
+    user_folder = os.path.join(
+        UPLOAD_DIR,
+        user_email
+    )
+
+    if not os.path.exists(user_folder):
+        return []
+
+    pdfs = []
+
+    for filename in os.listdir(user_folder):
+        if filename.endswith(".pdf"):
+            pdfs.append({
+                "filename": filename
+            })
+
+    return pdfs
+
+
+@router.delete("/delete-pdf/{filename}")
+async def delete_pdf(
+    filename: str,
+    current_user=Depends(get_current_user)
+):
+    user_email = current_user["email"]
+
+    file_path = os.path.join(
+        UPLOAD_DIR,
+        user_email,
+        filename
+    )
+
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
+    return {
+        "message": "PDF deleted successfully"
     }
