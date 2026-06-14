@@ -70,18 +70,31 @@ export default function DashboardPage() {
                 href="/quiz"
               />
 
-              <ToolCard
-                title="Mock Tests"
-                icon={<ClipboardCheck size={28} />}
-                description="Practice exams"
-                href="/mock-tests"
-              />
 
               <ToolCard
                 title="History"
                 icon={<History size={28} />}
                 description="View past chats"
                 href="/history"
+              />
+
+              <ToolCard
+                title="Previous Notes"
+                icon={<FileText size={28} />}
+                description="View PDFs notes"
+                href="/my-notes"
+              />
+              <ToolCard
+                title="My Quizzes"
+                description="View saved quizzes"
+                icon={<Brain size={28} />}
+                href="/my-quizzes"
+              />
+              <ToolCard
+                title="Mock Test"
+                description="Take AI-generated tests"
+                icon={<ClipboardCheck size={28} />}
+                href="/mock-test"
               />
 
             </div>

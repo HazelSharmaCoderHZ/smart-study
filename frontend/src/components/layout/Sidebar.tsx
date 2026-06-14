@@ -27,7 +27,7 @@ export default function Sidebar() {
       <nav className="space-y-4">
 
         <Link
-          href="/dashboard"
+          href="/pdfs"
           className="flex items-center gap-3"
         >
           <Upload size={20} />
@@ -57,6 +57,8 @@ export default function Sidebar() {
           <User size={20} />
           Profile
         </Link>
+
+        
 
       </nav>
     </aside>

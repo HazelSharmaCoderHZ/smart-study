@@ -17,7 +17,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from app.routes import study
 
+app.include_router(
+    study.router,
+    prefix="/api/study",
+    tags=["Study"]
+)
 from app.config.database import client
 from app.routes.auth import router as auth_router
 from app.routes import chat
@@ -52,3 +58,4 @@ def test_database():
             "status": "error",
             "message": str(e)
         }
+
