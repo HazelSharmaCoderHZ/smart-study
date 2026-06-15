@@ -8,14 +8,20 @@ import {
   Brain,
   ClipboardCheck,
   History,
+  FileStack,
+  ListChecks,
+  Trophy,
+  AlertTriangle,
+  BookOpen,
+  CheckCircle2,
 } from "lucide-react";
 
 import ToolCard from "@/components/dashboard/ToolCard";
+import StatCard from "@/components/dashboard/StatCard";
+import ProgressRing from "@/components/dashboard/ProgressRing";
+import MiniBarChart from "@/components/dashboard/MiniBarChart";
 import Sidebar from "@/components/layout/Sidebar";
-import { getAnalytics } from "@/services/study";
-import {
-  getInsights
-} from "@/services/study";
+import { getAnalytics, getInsights } from "@/services/study";
 
 interface Analytics {
   pdfs_uploaded: number;
@@ -26,256 +32,393 @@ interface Analytics {
 }
 
 export default function DashboardPage() {
-  const [analytics, setAnalytics] =
-    useState<Analytics>({
-      pdfs_uploaded: 0,
-      notes_generated: 0,
-      quizzes_generated: 0,
-      tests_taken: 0,
-      average_score: 0,
-    });
-    const [insights, setInsights] = useState({
-      best_topic: null as any,
-      weak_topic: null as any,
-    });
+  const [analytics, setAnalytics] = useState<Analytics>({
+    pdfs_uploaded: 0,
+    notes_generated: 0,
+    quizzes_generated: 0,
+    tests_taken: 0,
+    average_score: 0,
+  });
+
+  const [insights, setInsights] = useState({
+    best_topic: null as any,
+    weak_topic: null as any,
+  });
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const token =
-          localStorage.getItem("token");
-
+        const token = localStorage.getItem("token");
         if (!token) return;
 
-        const data =
-          await getAnalytics(token);
-          const insightsData =
-          await getInsights(token);
+        const data = await getAnalytics(token);
+        const insightsData = await getInsights(token);
 
         setInsights(insightsData);
-
         setAnalytics(data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
-    
 
     fetchAnalytics();
   }, []);
 
+  const activityData = [
+    { label: "PDFs", value: analytics.pdfs_uploaded },
+    { label: "Notes", value: analytics.notes_generated },
+    { label: "Quizzes", value: analytics.quizzes_generated },
+    { label: "Tests", value: analytics.tests_taken },
+  ];
+
   return (
-    <main className="min-h-screen dark:bg-black dark:text-white">
-      <div className="flex">
-        <Sidebar />
+    <main className="shell">
+      <Sidebar />
 
-        <section className="flex-1 p-10">
-          <h1 className="text-5xl font-bold">
-            Welcome Back 👋
-          </h1>
-
-          <p className="mt-3 opacity-70">
-            Ready to learn something new today?
-          </p>
-
-          {/* Analytics Section */}
-          <div className="mt-10">
-            <h2 className="text-2xl font-semibold mb-6">
-              Analytics
-            </h2>
-
-            <div className="grid md:grid-cols-5 gap-4">
-              <div className="border rounded-xl p-5">
-                <p className="text-sm opacity-70">
-                  PDFs Uploaded
-                </p>
-
-                <h3 className="text-3xl font-bold mt-2">
-                  {analytics.pdfs_uploaded}
-                </h3>
-              </div>
-
-              <div className="border rounded-xl p-5">
-                <p className="text-sm opacity-70">
-                  Notes Generated
-                </p>
-
-                <h3 className="text-3xl font-bold mt-2">
-                  {analytics.notes_generated}
-                </h3>
-              </div>
-
-              <div className="border rounded-xl p-5">
-                <p className="text-sm opacity-70">
-                  Quizzes Generated
-                </p>
-
-                <h3 className="text-3xl font-bold mt-2">
-                  {analytics.quizzes_generated}
-                </h3>
-              </div>
-
-              <div className="border rounded-xl p-5">
-                <p className="text-sm opacity-70">
-                  Tests Taken
-                </p>
-
-                <h3 className="text-3xl font-bold mt-2">
-                  {analytics.tests_taken}
-                </h3>
-              </div>
-
-              <div className="border rounded-xl p-5">
-                <p className="text-sm opacity-70">
-                  Avg Score
-                </p>
-
-                <h3 className="text-3xl font-bold mt-2">
-                  {analytics.average_score}%
-                </h3>
-              </div>
-            </div>
+      <section className="content">
+        {/* Header */}
+        <div className="dash-header rise-in">
+          <div>
+            <span className="badge">
+              <span className="dash-pulse" /> SYSTEM ONLINE
+            </span>
+            <h1 className="font-display dash-title">Welcome back 👋</h1>
+            <p className="dash-subtitle">
+              Here&apos;s how your learning is tracking today.
+            </p>
           </div>
+        </div>
 
-            <div className="mt-10">
-  <h2 className="text-2xl font-semibold mb-6">
-    Performance Insights
-  </h2>
+        {/* Analytics Section */}
+        <div className="dash-section">
+          <h2 className="font-display dash-section-title">Analytics</h2>
 
-  <div className="grid md:grid-cols-2 gap-6">
-
-    <div className="border rounded-xl p-6">
-      <h3 className="text-lg font-semibold">
-        🏆 Best Topic
-      </h3>
-
-      {insights.best_topic ? (
-        <>
-          <p className="mt-3 text-xl">
-            {
-              insights.best_topic
-                .topic
-            }
-          </p>
-
-          <p className="text-3xl font-bold mt-2">
-            {
-              insights.best_topic
-                .score
-            }%
-          </p>
-        </>
-      ) : (
-        <p className="mt-3 opacity-70">
-          No data yet
-        </p>
-      )}
-    </div>
-
-    <div className="border rounded-xl p-6">
-      <h3 className="text-lg font-semibold">
-        ⚠ Needs Improvement
-      </h3>
-
-      {insights.weak_topic ? (
-        <>
-          <p className="mt-3 text-xl">
-            {
-              insights.weak_topic
-                .topic
-            }
-          </p>
-
-          <p className="text-3xl font-bold mt-2">
-            {
-              insights.weak_topic
-                .score
-            }%
-          </p>
-        </>
-      ) : (
-        <p className="mt-3 opacity-70">
-          No data yet
-        </p>
-      )}
-    </div>
-
-  </div>
-</div>
-
-          {/* Study Tools */}
-          <div className="mt-12">
-            <h2 className="text-2xl font-semibold mb-6">
-              Study Tools
-            </h2>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              <ToolCard
-                title="My PDFs"
-                icon={<FileText size={28} />}
-                description="View uploaded PDFs"
-                href="/my-pdfs"
+          {loading ? (
+            <div className="dash-grid-5">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <div key={i} className="glass dash-stat-skeleton">
+                  <div className="skeleton" style={{ width: 38, height: 38, borderRadius: "var(--r-sm)" }} />
+                  <div className="skeleton" style={{ width: "60%", height: 28, marginTop: "1rem" }} />
+                  <div className="skeleton" style={{ width: "80%", height: 14, marginTop: "0.6rem" }} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="dash-grid-5">
+              <StatCard
+                label="PDFs Uploaded"
+                value={analytics.pdfs_uploaded}
+                icon={<FileText size={20} />}
+                accent="var(--accent)"
+                delay={0}
               />
-
-              <ToolCard
-                title="AI Chat"
-                icon={<MessageSquare size={28} />}
-                description="Chat with your documents"
-                href="/chat"
+              <StatCard
+                label="Notes Generated"
+                value={analytics.notes_generated}
+                icon={<NotebookPen size={20} />}
+                accent="var(--accent-2)"
+                delay={60}
               />
-
-              <ToolCard
-                title="Notes"
-                icon={<NotebookPen size={28} />}
-                description="Generate smart notes"
-                href="/notes"
+              <StatCard
+                label="Quizzes Generated"
+                value={analytics.quizzes_generated}
+                icon={<Brain size={20} />}
+                accent="var(--success)"
+                delay={120}
               />
-
-              <ToolCard
-                title="Quiz"
-                icon={<Brain size={28} />}
-                description="Generate quizzes"
-                href="/quiz"
+              <StatCard
+                label="Tests Taken"
+                value={analytics.tests_taken}
+                icon={<ClipboardCheck size={20} />}
+                accent="var(--warning)"
+                delay={180}
               />
-
-              <ToolCard
-                title="History"
-                icon={<History size={28} />}
-                description="View past chats"
-                href="/history"
-              />
-
-              <ToolCard
-                title="Previous Notes"
-                icon={<FileText size={28} />}
-                description="View saved notes"
-                href="/my-notes"
-              />
-
-              <ToolCard
-                title="My Quizzes"
-                icon={<Brain size={28} />}
-                description="View saved quizzes"
-                href="/my-quizzes"
-              />
-
-              <ToolCard
-                title="Mock Test"
-                icon={<ClipboardCheck size={28} />}
-                description="Take AI-generated tests"
-                href="/mock-test"
-              />
-
-              <ToolCard
-                title="My Results"
-                icon={<ClipboardCheck size={28} />}
-                description="View test performance"
-                href="/results"
+              <StatCard
+                label="Avg Score"
+                value={analytics.average_score}
+                suffix="%"
+                icon={<CheckCircle2 size={20} />}
+                accent="var(--danger)"
+                delay={240}
               />
             </div>
+          )}
+        </div>
+
+        {/* Performance Insights */}
+        <div className="dash-section">
+          <h2 className="font-display dash-section-title">Performance Insights</h2>
+
+          {loading ? (
+            <div className="dash-grid-3">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="glass insight-card">
+                  <div className="skeleton" style={{ width: "50%", height: 20 }} />
+                  <div className="skeleton" style={{ width: "100%", height: 90, marginTop: "0.75rem" }} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="dash-grid-3">
+              {/* Activity breakdown */}
+              <div className="glass glass-interactive insight-card rise-in" style={{ animationDelay: "100ms" }}>
+                <h3 className="font-display insight-title">
+                  <BookOpen size={18} />
+                  Activity Breakdown
+                </h3>
+                <p className="insight-sub">Your content generated so far</p>
+                <MiniBarChart data={activityData} />
+              </div>
+
+              {/* Best topic */}
+              <div className="glass glass-interactive insight-card rise-in" style={{ animationDelay: "180ms" }}>
+                <h3 className="font-display insight-title">
+                  <Trophy size={18} color="var(--success)" />
+                  Best Topic
+                </h3>
+
+                {insights.best_topic ? (
+                  <div className="insight-ring-row">
+                    <ProgressRing value={insights.best_topic.score} color="var(--success)" />
+                    <div>
+                      <p className="insight-topic-name">{insights.best_topic.topic}</p>
+                      <p className="insight-topic-sub">Strongest performance area</p>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="insight-empty">No data yet — take a quiz to get started.</p>
+                )}
+              </div>
+
+              {/* Weak topic */}
+              <div className="glass glass-interactive insight-card rise-in" style={{ animationDelay: "260ms" }}>
+                <h3 className="font-display insight-title">
+                  <AlertTriangle size={18} color="var(--warning)" />
+                  Needs Improvement
+                </h3>
+
+                {insights.weak_topic ? (
+                  <div className="insight-ring-row">
+                    <ProgressRing value={insights.weak_topic.score} color="var(--warning)" />
+                    <div>
+                      <p className="insight-topic-name">{insights.weak_topic.topic}</p>
+                      <p className="insight-topic-sub">Focus here for the biggest gains</p>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="insight-empty">No data yet — take a quiz to get started.</p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Study Tools */}
+        <div className="dash-section">
+          <h2 className="font-display dash-section-title">Study Tools</h2>
+
+          <div className="dash-grid-3">
+            <ToolCard
+              title="My PDFs"
+              icon={<FileText size={24} />}
+              description="View uploaded PDFs"
+              href="/my-pdfs"
+            />
+            <ToolCard
+              title="Upload PDF"
+              icon={<FileText size={24} />}
+              description="Add new study material"
+              href="/pdfs"
+            />
+            <ToolCard
+              title="AI Chat"
+              icon={<MessageSquare size={24} />}
+              description="Chat with your documents"
+              href="/chat"
+            />
+            <ToolCard
+              title="Notes"
+              icon={<NotebookPen size={24} />}
+              description="Generate smart notes"
+              href="/notes"
+            />
+            <ToolCard
+              title="Previous Notes"
+              icon={<FileStack size={24} />}
+              description="View saved notes"
+              href="/my-notes"
+            />
+            <ToolCard
+              title="Quiz"
+              icon={<Brain size={24} />}
+              description="Generate quizzes"
+              href="/quiz"
+            />
+            <ToolCard
+              title="My Quizzes"
+              icon={<ListChecks size={24} />}
+              description="View saved quizzes"
+              href="/my-quizzes"
+            />
+            <ToolCard
+              title="Mock Test"
+              icon={<ClipboardCheck size={24} />}
+              description="Take AI-generated tests"
+              href="/mock-test"
+            />
+            <ToolCard
+              title="My Results"
+              icon={<ClipboardCheck size={24} />}
+              description="View test performance"
+              href="/results"
+            />
+            <ToolCard
+              title="History"
+              icon={<History size={24} />}
+              description="View past chats"
+              href="/history"
+            />
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      <style>{`
+        .dash-header {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 1rem;
+          flex-wrap: wrap;
+          margin-bottom: 2rem;
+        }
+
+        .dash-pulse {
+          width: 6px;
+          height: 6px;
+          border-radius: 999px;
+          background: var(--success);
+          box-shadow: 0 0 6px var(--success);
+          animation: pulse-dot 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        .dash-title {
+          font-size: clamp(1.8rem, 4vw, 2.75rem);
+          font-weight: 700;
+          margin: 0.6rem 0 0.35rem;
+        }
+
+        .dash-subtitle {
+          color: var(--text-soft);
+          margin: 0;
+          font-size: 0.95rem;
+        }
+
+        .dash-section {
+          margin-bottom: 2.5rem;
+        }
+
+        .dash-section-title {
+          font-size: 1.3rem;
+          font-weight: 600;
+          margin: 0 0 1.1rem;
+        }
+
+        .dash-grid-5 {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 1rem;
+        }
+
+        .dash-grid-3 {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1.25rem;
+        }
+
+        .dash-stat-skeleton {
+          padding: 1.25rem;
+        }
+
+        .insight-card {
+          padding: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+
+        .insight-title {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 1.05rem;
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .insight-sub {
+          font-size: 0.8rem;
+          color: var(--text-faint);
+          margin: -0.4rem 0 0;
+        }
+
+        .insight-ring-row {
+          display: flex;
+          align-items: center;
+          gap: 1.25rem;
+          margin-top: 0.5rem;
+        }
+
+        .insight-topic-name {
+          font-size: 1.1rem;
+          font-weight: 600;
+          margin: 0 0 0.25rem;
+        }
+
+        .insight-topic-sub {
+          font-size: 0.8rem;
+          color: var(--text-soft);
+          margin: 0;
+        }
+
+        .insight-empty {
+          color: var(--text-faint);
+          font-size: 0.9rem;
+          margin: 0.5rem 0 0;
+        }
+
+        @media (max-width: 1100px) {
+          .dash-grid-5 {
+            grid-template-columns: repeat(3, 1fr);
+          }
+          .dash-grid-3 {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .dash-grid-5 {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .dash-grid-3 {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .dash-grid-5 {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+      `}</style>
     </main>
   );
 }

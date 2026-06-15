@@ -1,64 +1,76 @@
 "use client";
 
 import Link from "next/link";
-import ThemeToggle from "../theme/theme-toggle";
+import { Sparkles } from "lucide-react";
+import ThemeToggle from "@/components/theme/theme-toggle";
 
 export default function Navbar() {
   return (
-    <nav
-    className="
-        fixed
-        top-0
-        left-0
-        right-0
-        z-50
-        backdrop-blur-xl
-        bg-white/5
-        border-b
-        border-white/10
-    "
-    >
-      <div className="
-        max-w-7xl
-        mx-auto
-        px-8
-        py-5
-        flex
-        justify-between
-        items-center
-        ">
-        <h1 className="font-bold text-2xl">
-        Smart Study Companion
-        </h1>
+    <header className="navbar-wrap">
+      <nav className="glass navbar">
+        <Link href="/" className="font-display navbar-brand">
+          <Sparkles size={20} color="var(--accent)" />
+          StudyOS
+        </Link>
 
-        <div className="hidden md:flex items-center gap-12 text-sm font-medium">
-          <Link href="/">Home</Link>
-          <Link href="/">Features</Link>
-          <Link href="/">About</Link>
+        <div className="navbar-actions">
+          <ThemeToggle />
+          <Link href="/login" className="btn navbar-login">
+            Log in
+          </Link>
+          <Link href="/signup" className="btn btn-primary navbar-signup">
+            Get Started
+          </Link>
         </div>
+      </nav>
 
-        <div className="flex items-center gap-4">
+      <style>{`
+        .navbar-wrap {
+          position: sticky;
+          top: 0;
+          z-index: 50;
+          padding: 1rem 1.25rem;
+        }
 
-    
+        .navbar {
+          max-width: 1140px;
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.75rem 1.25rem;
+        }
 
-    <ThemeToggle />
+        .navbar-brand {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-weight: 700;
+          font-size: 1.1rem;
+          text-decoration: none;
+          color: var(--text);
+        }
 
-    <Link
-        href="/login"
-        className="
-        px-4
-        py-2
-        rounded-xl
-        border
-        "
-    >
-        Login
-    </Link>
+        .navbar-actions {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+        }
 
-    </div>
+        .navbar-login {
+          text-decoration: none;
+        }
 
-        
-      </div>
-    </nav>
+        .navbar-signup {
+          text-decoration: none;
+        }
+
+        @media (max-width: 480px) {
+          .navbar-login {
+            display: none;
+          }
+        }
+      `}</style>
+    </header>
   );
 }
