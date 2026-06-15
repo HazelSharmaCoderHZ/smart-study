@@ -1,7 +1,9 @@
 import json
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
-
+from app.services.analytics_service import (
+    get_analytics
+)
 from app.utils.auth_dependency import get_current_user
 from app.services.rag_service import retrieve_context
 from app.services.gemini_service import generate_answer
@@ -12,6 +14,9 @@ from app.services.test_service import (
     get_test_results
 )
 router = APIRouter()
+from app.services.insights_service import (
+    get_insights
+)
 
 class NotesRequest(BaseModel):
     topic: str
@@ -211,5 +216,23 @@ def fetch_results(
 ):
 
     return get_test_results(
+        current_user["email"]
+    )
+
+@router.get("/analytics")
+def analytics(
+    current_user=Depends(get_current_user)
+):
+
+    return get_analytics(
+        current_user["email"]
+    )
+
+@router.get("/insights")
+def insights(
+    current_user=Depends(get_current_user)
+):
+
+    return get_insights(
         current_user["email"]
     )

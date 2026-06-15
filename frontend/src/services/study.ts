@@ -104,3 +104,48 @@ export const saveTestResult = async (
 
   return response.data;
 };
+
+export const getTestResults = async (
+  token: string
+) => {
+  const response = await api.get(
+    "/api/study/test-results",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const getAnalytics = async (
+  token: string
+) => {
+  const response = await api.get(
+    "/api/study/analytics",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const getInsights = async (
+  token: string
+) => {
+  const response = await api.get(
+    "/api/study/insights",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
