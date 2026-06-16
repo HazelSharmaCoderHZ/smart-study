@@ -1,9 +1,13 @@
+
+print("PDF STEP 1")
 from fastapi import APIRouter, UploadFile, File
 from app.utils.pdf_extractor import extract_text_from_pdf
+print("PDF STEP 2")
 from app.utils.text_chunker import chunk_text
 import os
 import shutil
 from app.config.chroma import collection
+print("PDF STEP 3")
 
 router = APIRouter()
 
@@ -56,19 +60,8 @@ async def upload_pdf(
         "chunks_created": len(chunks)
     }
 
-from app.utils.embeddings import get_embedding
 
 
-@router.get("/test-search")
-def test_search(
-    current_user=Depends(get_current_user)
-):
-
-    query_embedding = get_embedding(
-        "What is DBMS?"
-    )
-
-    
 
     
 

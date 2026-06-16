@@ -1,3 +1,7 @@
-print("CHROMA FILE LOADED")
+import chromadb
 
-collection = None
+client = chromadb.PersistentClient(path="./chroma_db")
+
+collection = client.get_or_create_collection(
+    name="study_materials"
+)
