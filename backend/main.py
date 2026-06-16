@@ -17,3 +17,10 @@ app.include_router(
     prefix="/api/study",
     tags=["Study"]
 )
+from app.routes.pdf import router as pdf_router
+
+app.include_router(
+    pdf_router,
+    prefix="/api/pdf",
+    tags=["PDF"]
+)
