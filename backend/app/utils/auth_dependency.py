@@ -1,3 +1,4 @@
+print("AUTH DEPENDENCY LOADED")
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 

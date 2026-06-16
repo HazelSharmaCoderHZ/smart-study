@@ -1,3 +1,4 @@
+print("JWT HANDLER LOADED")
 import jwt
 from datetime import datetime, timedelta
 from app.config.settings import JWT_SECRET_KEY

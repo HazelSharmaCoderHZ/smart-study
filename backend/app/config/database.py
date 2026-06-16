@@ -1,3 +1,4 @@
+print("DATABASE LOADED")
 from pymongo import MongoClient
 from app.config.settings import MONGODB_URI, DATABASE_NAME
 
