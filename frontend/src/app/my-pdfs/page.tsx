@@ -42,7 +42,7 @@ export default function MyPdfsPage() {
 
   const handleView = (filename: string) => {
     const token = localStorage.getItem("token");
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
     // Opens the PDF served by FastAPI — adjust the path if your endpoint differs
     const url = `${baseUrl}/pdf/view/${encodeURIComponent(filename)}?token=${token}`;
     window.open(url, "_blank", "noopener,noreferrer");
