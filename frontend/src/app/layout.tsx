@@ -5,7 +5,7 @@ import AuroraBackground from "@/components/layout/AuroraBackground";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "StudyOS — Your AI Study Companion",
+  title: "StudySmart — Your AI Study Companion",
   description:
     "Upload, chat, summarize, quiz, and track your learning — all in one intelligent workspace.",
 };

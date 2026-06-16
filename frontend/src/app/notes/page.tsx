@@ -46,7 +46,7 @@ export default function NotesPage() {
           <label className="notesgen-label font-mono">TOPIC</label>
           <input
             type="text"
-            placeholder="e.g. Photosynthesis, French Revolution, Linked Lists..."
+            placeholder="Type the name of your uploaded pdf or any topic given in the pdfs"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             className="field"

@@ -42,7 +42,7 @@ export default function LoginPage() {
       <div className="glass auth-card rise-in">
         <Link href="/" className="font-display auth-brand">
           <Sparkles size={22} color="var(--accent)" />
-          StudyOS
+          StudySmart
         </Link>
 
         <h1 className="font-display auth-title">Welcome back</h1>

@@ -44,7 +44,7 @@ export default function QuizPage() {
           <input
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            placeholder="e.g. Newton's Laws, SQL Joins, The Renaissance..."
+            placeholder="Type the name of your uploaded pdf or any topic given in the pdfs"
             className="field"
           />
 

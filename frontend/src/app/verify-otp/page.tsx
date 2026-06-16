@@ -45,7 +45,7 @@ export default function VerifyOtpPage() {
       <div className="glass auth-card rise-in">
         <Link href="/" className="font-display auth-brand">
           <Sparkles size={22} color="var(--accent)" />
-          StudyOS
+          StudySmart
         </Link>
 
         <div className="otp-icon">

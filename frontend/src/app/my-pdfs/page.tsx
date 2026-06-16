@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FileText, Trash2, RefreshCw, Eye } from "lucide-react";
+import { FileText, Trash2, RefreshCw, Eye, ExternalLink } from "lucide-react";
 import Sidebar from "@/components/layout/Sidebar";
 import { getMyPdfs, deletePdf } from "@/services/pdf";
 
@@ -17,10 +17,8 @@ export default function MyPdfsPage() {
   const fetchPdfs = async (isRefresh = false) => {
     try {
       if (isRefresh) setRefreshing(true);
-
       const token = localStorage.getItem("token");
       if (!token) return;
-
       const data = await getMyPdfs(token);
       setPdfs(data);
     } catch (error) {
@@ -35,13 +33,19 @@ export default function MyPdfsPage() {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
-
       await deletePdf(filename, token);
-
       setPdfs((prev) => prev.filter((pdf) => pdf.filename !== filename));
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleView = (filename: string) => {
+    const token = localStorage.getItem("token");
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    // Opens the PDF served by FastAPI — adjust the path if your endpoint differs
+    const url = `${baseUrl}/pdf/view/${encodeURIComponent(filename)}?token=${token}`;
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   useEffect(() => {
@@ -53,6 +57,7 @@ export default function MyPdfsPage() {
       <Sidebar />
 
       <section className="content">
+
         <div className="pdfs-header rise-in">
           <div>
             <span className="badge">
@@ -105,15 +110,21 @@ export default function MyPdfsPage() {
                 <span className="pdfs-filename">{pdf.filename}</span>
 
                 <div className="pdfs-actions">
-                  <button className="btn pdfs-view-btn">
-                    <Eye size={16} />
+                  <button
+                    onClick={() => handleView(pdf.filename)}
+                    className="btn pdfs-view-btn"
+                    title="Open PDF in new tab"
+                  >
+                    <Eye size={15} />
                     View
+                    <ExternalLink size={12} className="pdfs-ext-icon" />
                   </button>
 
                   <button
                     onClick={() => handleDelete(pdf.filename)}
                     className="btn pdfs-delete-btn"
                     aria-label={`Delete ${pdf.filename}`}
+                    title="Delete PDF"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -146,13 +157,10 @@ export default function MyPdfsPage() {
           font-size: 0.95rem;
         }
 
-        .spin {
-          animation: spin 1s linear infinite;
-        }
-
+        .spin { animation: spin 1s linear infinite; }
         @keyframes spin {
           from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+          to   { transform: rotate(360deg); }
         }
 
         .pdfs-grid {
@@ -184,20 +192,33 @@ export default function MyPdfsPage() {
           font-size: 0.92rem;
           word-break: break-word;
           line-height: 1.4;
+          flex: 1;
         }
 
         .pdfs-actions {
           display: flex;
           gap: 0.6rem;
+          margin-top: auto;
         }
 
         .pdfs-view-btn {
           flex: 1;
+          gap: 0.4rem;
+        }
+
+        .pdfs-ext-icon {
+          opacity: 0.55;
+          margin-left: auto;
         }
 
         .pdfs-delete-btn {
           color: var(--danger);
           padding: 0.7rem;
+        }
+
+        .pdfs-delete-btn:hover {
+          border-color: var(--danger);
+          background: rgba(251,113,133,0.08);
         }
 
         .pdfs-empty {
@@ -223,15 +244,11 @@ export default function MyPdfsPage() {
         }
 
         @media (max-width: 1100px) {
-          .pdfs-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
+          .pdfs-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 640px) {
-          .pdfs-grid {
-            grid-template-columns: 1fr;
-          }
+          .pdfs-grid { grid-template-columns: 1fr; }
         }
       `}</style>
     </main>

@@ -5,9 +5,6 @@ export default function Hero() {
   return (
     <section className="hero">
       <div className="hero-inner">
-        <span className="badge hero-badge">
-          <span className="hero-pulse" /> AI-POWERED LEARNING
-        </span>
 
         <h1 className="font-display hero-title">
           Turn any PDF into your

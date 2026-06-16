@@ -17,12 +17,14 @@ import {
   Menu,
   X,
   Sparkles,
+  Upload,
 } from "lucide-react";
 import ThemeToggle from "@/components/theme/theme-toggle";
 
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "My PDFs", href: "/my-pdfs", icon: FileText },
+  { label: "Upload PDF", href: "/pdfs", icon: Upload },
   { label: "AI Chat", href: "/chat", icon: MessageSquare },
   { label: "Notes", href: "/notes", icon: NotebookPen },
   { label: "Previous Notes", href: "/my-notes", icon: FileStack },
@@ -36,167 +38,138 @@ const NAV_ITEMS = [
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    router.push("/login");
+    router.push("/");
   };
+
+  const NavContent = () => (
+    <>
+      {/* Brand */}
+      <Link
+        href="/dashboard"
+        className="sidebar-brand"
+        onClick={() => setMobileOpen(false)}
+      >
+        <Sparkles size={22} color="var(--accent)" />
+        <span className="font-display">StudySmart</span>
+      </Link>
+
+      {/* Nav links */}
+      <nav className="sidebar-nav" aria-label="Main navigation">
+        {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
+          const active = pathname === href;
+          return (
+            <Link
+              key={href}
+              href={href}
+              onClick={() => setMobileOpen(false)}
+              className={`sidebar-link ${active ? "sidebar-link-active" : ""}`}
+            >
+              <Icon size={17} />
+              <span>{label}</span>
+              {active && <span className="sidebar-dot" aria-hidden="true" />}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Footer: theme toggle + logout */}
+      <div className="sidebar-footer">
+        <div className="sidebar-footer-row">
+          <span className="sidebar-footer-label font-mono">APPEARANCE</span>
+          <ThemeToggle />
+        </div>
+
+        <button onClick={handleLogout} className="sidebar-logout btn">
+          <LogOut size={16} />
+          Log out
+        </button>
+      </div>
+    </>
+  );
 
   return (
     <>
-      {/* Mobile top bar */}
-      <div
-        className="glass"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0.9rem 1.25rem",
-          borderRadius: 0,
-          borderTop: "none",
-          borderLeft: "none",
-          borderRight: "none",
-          position: "sticky",
-          top: 0,
-          zIndex: 40,
-        }}
-      >
-        <Link
-          href="/dashboard"
-          className="font-display"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            fontWeight: 700,
-            fontSize: "1.1rem",
-            color: "var(--text)",
-            textDecoration: "none",
-          }}
-        >
-          <Sparkles size={20} color="var(--accent)" />
-          StudyOS
+      {/* ── Desktop sidebar ─────────────────────────────── */}
+      <aside className="sidebar-desktop glass" aria-label="Site navigation">
+        <NavContent />
+      </aside>
+
+      {/* ── Mobile: fixed top bar ────────────────────────── */}
+      <div className="sidebar-topbar glass">
+        <Link href="/dashboard" className="sidebar-brand sidebar-brand-mobile">
+          <Sparkles size={18} color="var(--accent)" />
+          <span className="font-display">StudySmart</span>
         </Link>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <ThemeToggle />
-          <button
-            className="btn"
-            style={{ width: 42, height: 42, padding: 0, borderRadius: "999px" }}
-            onClick={() => setOpen((o) => !o)}
-            aria-label="Toggle navigation menu"
-          >
-            {open ? <X size={18} /> : <Menu size={18} />}
-          </button>
-        </div>
+        <button
+          className="btn sidebar-hamburger"
+          onClick={() => setMobileOpen((o) => !o)}
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+        >
+          {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+        </button>
       </div>
 
-      <div className="sidebar-mobile-spacer" />
+      {/* ── Mobile: slide-in drawer ──────────────────────── */}
+      {mobileOpen && (
+        <div
+          className="sidebar-backdrop"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       <aside
-        className={`sidebar-panel ${open ? "sidebar-open" : ""}`}
-        aria-label="Main navigation"
+        className={`sidebar-drawer glass ${mobileOpen ? "sidebar-drawer-open" : ""}`}
+        aria-label="Mobile navigation"
       >
-        <div className="sidebar-inner glass">
-          <Link
-            href="/dashboard"
-            className="font-display sidebar-brand"
-            onClick={() => setOpen(false)}
-          >
-            <Sparkles size={22} color="var(--accent)" />
-            <span>StudyOS</span>
-          </Link>
-
-          <nav className="sidebar-nav">
-            {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
-              const active = pathname === href;
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setOpen(false)}
-                  className={`sidebar-link ${active ? "sidebar-link-active" : ""}`}
-                >
-                  <Icon size={18} />
-                  <span>{label}</span>
-                  {active && <span className="sidebar-active-dot" />}
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="sidebar-footer">
-            <div className="sidebar-toggle-row">
-              <span className="font-mono" style={{ fontSize: "0.72rem", color: "var(--text-faint)" }}>
-                APPEARANCE
-              </span>
-              <ThemeToggle />
-            </div>
-
-            <button
-              onClick={handleLogout}
-              className="btn sidebar-logout"
-            >
-              <LogOut size={16} />
-              Log out
-            </button>
-          </div>
-        </div>
+        <NavContent />
       </aside>
 
       <style>{`
-        .sidebar-mobile-spacer {
-          display: none;
-        }
-
-        .sidebar-panel {
-          width: 260px;
-          flex-shrink: 0;
-          padding: 1.25rem;
-          position: sticky;
-          top: 0;
-          height: 100vh;
-          overflow-y: auto;
-        }
-
-        .sidebar-inner {
-          height: 100%;
-          padding: 1.25rem;
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-        }
-
+        /* ── Shared inner layout ── */
         .sidebar-brand {
           display: flex;
           align-items: center;
           gap: 0.55rem;
           font-weight: 700;
-          font-size: 1.2rem;
+          font-size: 1.15rem;
           color: var(--text);
           text-decoration: none;
+          padding: 0.25rem 0;
+          flex-shrink: 0;
+        }
+
+        .sidebar-brand-mobile {
+          font-size: 1rem;
         }
 
         .sidebar-nav {
+          flex: 1;
           display: flex;
           flex-direction: column;
-          gap: 0.25rem;
-          flex: 1;
+          gap: 0.2rem;
+          overflow-y: auto;
         }
 
         .sidebar-link {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
-          padding: 0.65rem 0.8rem;
+          gap: 0.7rem;
+          padding: 0.6rem 0.8rem;
           border-radius: var(--r-sm);
           color: var(--text-soft);
           text-decoration: none;
-          font-size: 0.9rem;
+          font-size: 0.875rem;
           font-weight: 500;
           position: relative;
-          transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.2s var(--ease);
+          transition: background 0.18s var(--ease), color 0.18s var(--ease),
+            transform 0.18s var(--ease);
+          white-space: nowrap;
         }
 
         .sidebar-link:hover {
@@ -206,62 +179,143 @@ export default function Sidebar() {
         }
 
         .sidebar-link-active {
-          background: linear-gradient(135deg, rgba(124,92,255,0.16), rgba(34,211,238,0.08));
+          background: linear-gradient(
+            135deg,
+            rgba(124, 92, 255, 0.16),
+            rgba(34, 211, 238, 0.07)
+          );
           color: var(--text);
           border: 1px solid var(--border-strong);
         }
 
-        .sidebar-active-dot {
+        .sidebar-dot {
           margin-left: auto;
           width: 6px;
           height: 6px;
           border-radius: 999px;
           background: var(--accent);
           box-shadow: 0 0 8px var(--accent);
+          flex-shrink: 0;
         }
 
         .sidebar-footer {
           display: flex;
           flex-direction: column;
-          gap: 0.75rem;
-          padding-top: 1rem;
+          gap: 0.6rem;
+          padding-top: 0.75rem;
           border-top: 1px solid var(--border);
+          flex-shrink: 0;
         }
 
-        .sidebar-toggle-row {
-          display: none;
+        .sidebar-footer-row {
+          display: flex;
           align-items: center;
           justify-content: space-between;
+        }
+
+        .sidebar-footer-label {
+          font-size: 0.68rem;
+          letter-spacing: 0.08em;
+          color: var(--text-faint);
         }
 
         .sidebar-logout {
           justify-content: flex-start;
           width: 100%;
           color: var(--danger);
+          font-size: 0.875rem;
+          padding: 0.55rem 0.8rem;
+        }
+
+        /* ── Desktop sidebar (always visible ≥ 1024px) ── */
+        .sidebar-desktop {
+          display: none;
+          width: 250px;
+          flex-shrink: 0;
+          height: 100vh;
+          position: sticky;
+          top: 0;
+          padding: 1.5rem 1.1rem;
+          flex-direction: column;
+          gap: 1.25rem;
+          overflow-y: auto;
+          border-radius: 0;
+          border-top: none;
+          border-bottom: none;
+          border-left: none;
+        }
+
+        @media (min-width: 1024px) {
+          .sidebar-desktop {
+            display: flex;
+          }
+        }
+
+        /* ── Mobile top bar (visible < 1024px) ── */
+        .sidebar-topbar {
+          display: none;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.8rem 1.1rem;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 60;
+          border-radius: 0;
+          border-top: none;
+          border-left: none;
+          border-right: none;
         }
 
         @media (max-width: 1023px) {
-          .sidebar-mobile-spacer {
-            display: block;
+          .sidebar-topbar {
+            display: flex;
           }
+        }
 
-          .sidebar-panel {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: min(82vw, 300px);
-            transform: translateX(-105%);
-            transition: transform 0.35s var(--ease);
-            z-index: 50;
-            padding-top: 4.5rem;
-          }
+        .sidebar-hamburger {
+          width: 38px;
+          height: 38px;
+          padding: 0;
+          border-radius: 999px;
+        }
 
-          .sidebar-open {
-            transform: translateX(0);
-          }
+        /* ── Mobile drawer ── */
+        .sidebar-backdrop {
+          position: fixed;
+          inset: 0;
+          z-index: 70;
+          background: rgba(0, 0, 0, 0.45);
+          backdrop-filter: blur(2px);
+        }
 
-          .sidebar-toggle-row {
+        .sidebar-drawer {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 100vh;
+          width: min(78vw, 280px);
+          z-index: 80;
+          padding: 1.5rem 1.1rem;
+          flex-direction: column;
+          gap: 1.25rem;
+          overflow-y: auto;
+          border-radius: 0;
+          border-top: none;
+          border-bottom: none;
+          border-left: none;
+          transform: translateX(-110%);
+          transition: transform 0.32s var(--ease);
+        }
+
+        .sidebar-drawer-open {
+          transform: translateX(0);
+        }
+
+        @media (max-width: 1023px) {
+          .sidebar-drawer {
             display: flex;
           }
         }

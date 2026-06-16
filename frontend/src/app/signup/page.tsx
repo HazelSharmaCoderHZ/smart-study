@@ -43,7 +43,7 @@ export default function SignupPage() {
       <div className="glass auth-card rise-in">
         <Link href="/" className="font-display auth-brand">
           <Sparkles size={22} color="var(--accent)" />
-          StudyOS
+          StudySmart
         </Link>
 
         <h1 className="font-display auth-title">Create account</h1>

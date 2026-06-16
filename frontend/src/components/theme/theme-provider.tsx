@@ -25,7 +25,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("studyos-theme") as Theme | null;
+    const stored = localStorage.getItem("StudySmart-theme") as Theme | null;
     const initial =
       stored ??
       (window.matchMedia("(prefers-color-scheme: light)").matches
@@ -41,7 +41,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const next: Theme = theme === "dark" ? "light" : "dark";
     setTheme(next);
     document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem("studyos-theme", next);
+    localStorage.setItem("StudySmart-theme", next);
   };
 
   // Avoid flash of wrong theme before hydration completes.
