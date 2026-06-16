@@ -21,7 +21,7 @@ export default function StatCard({
   delay = 0,
 }: StatCardProps) {
   const [display, setDisplay] = useState(0);
-  const frame = useRef<number>();
+  const frame = useRef<number | null>(null);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
