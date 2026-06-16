@@ -1,26 +1,9 @@
 from fastapi import FastAPI
 
+print("MAIN LOADED")
+
 app = FastAPI()
-
-from app.routes.auth import router as auth_router
-
-app.include_router(auth_router)
 
 @app.get("/")
 def home():
-    return {"message": "alive"}
-
-from app.routes import study
-
-app.include_router(
-    study.router,
-    prefix="/api/study",
-    tags=["Study"]
-)
-from app.routes.pdf import router as pdf_router
-
-app.include_router(
-    pdf_router,
-    prefix="/api/pdf",
-    tags=["PDF"]
-)
+    return {"message": "Backend running"}
