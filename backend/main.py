@@ -9,3 +9,11 @@ app.include_router(auth_router)
 @app.get("/")
 def home():
     return {"message": "alive"}
+
+from app.routes import study
+
+app.include_router(
+    study.router,
+    prefix="/api/study",
+    tags=["Study"]
+)
