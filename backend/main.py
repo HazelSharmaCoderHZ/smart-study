@@ -1,12 +1,14 @@
 from fastapi import FastAPI
-
-print("MAIN LOADED")
+from app.routes.chat import router as chat_router
 
 app = FastAPI()
 
+app.include_router(
+    chat_router,
+    prefix="/api/chat",
+    tags=["Chat"]
+)
+
 @app.get("/")
 def home():
-    return {"message": "Backend running"}
-
-from app.routes.auth import router as auth_router
-from app.routes.chat import router
+    return {"message": "working"}
