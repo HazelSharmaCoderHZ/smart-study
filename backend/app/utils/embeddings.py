@@ -1,31 +1,17 @@
-model = None
+from google.generativeai import embed_content
+import google.generativeai as genai
+
+from app.config.settings import GEMINI_API_KEY
+
+genai.configure(api_key=GEMINI_API_KEY)
+
 
 def get_embedding(text):
-    global model
 
-    if model is None:
-        print("LOADING MODEL...")
+    response = embed_content(
+        model="models/embedding-001",
+        content=text,
+        task_type="retrieval_document"
+    )
 
-        from sentence_transformers import SentenceTransformer
-
-        model = SentenceTransformer(
-            "sentence-transformers/all-MiniLM-L6-v2"
-        )
-
-    return model.encode(text).tolist()
-
-def get_model():
-    global model
-
-    if model is None:
-        from sentence_transformers import SentenceTransformer
-
-        print("Loading SentenceTransformer model...")
-
-        model = SentenceTransformer(
-            "sentence-transformers/all-MiniLM-L6-v2"
-        )
-
-        print("Model loaded successfully!")
-
-    return model
+    return response["embedding"]
