@@ -1,8 +1,10 @@
 from app.config.chroma import collection
-from app.utils.embeddings import get_embedding
 
 def store_chunks(chunks, filename, user_id):
+    from app.utils.embeddings import get_embedding
+
     print("STORING USER:", repr(user_id))
+
     for idx, chunk in enumerate(chunks):
 
         embedding = get_embedding(chunk)
