@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.routes.chat import router as chat_router
 from app.routes.pdf import router as pdf_router
-
+from app.routes.study import router as study_router
 app = FastAPI()
 
 app.include_router(
