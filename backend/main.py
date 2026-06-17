@@ -9,3 +9,4 @@ def home():
     return {"message": "Backend running"}
 
 from app.routes.auth import router as auth_router
+from app.routes.chat import router
