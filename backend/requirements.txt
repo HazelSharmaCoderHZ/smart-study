@@ -50,7 +50,7 @@ jsonpatch==1.33
 jsonpointer==3.1.1
 jsonschema==4.26.0
 jsonschema-specifications==2025.9.1
-jwt==1.4.0
+PyJWT==2.13.0
 kubernetes==36.0.2
 langchain-core==1.4.7
 langchain-protocol==0.0.17
