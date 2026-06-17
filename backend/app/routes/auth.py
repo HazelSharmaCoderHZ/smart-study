@@ -1,23 +1,30 @@
+print("AUTH STEP 1")
 from datetime import datetime, timedelta
+print("AUTH STEP 2")
 import random
-
+print("AUTH STEP 3")
 from fastapi import APIRouter, HTTPException, Depends
-
+print("AUTH STEP 4")
 from app.models.user import (
     UserSignup,
     UserLogin,
     VerifyOTPRequest,
     ResendOTPRequest,
 )
+print("AUTH STEP 5")
 from app.services.auth_service import (
     create_user,
     get_user_by_email,
     update_user_otp,
     verify_otp,
 )
+print("AUTH STEP 6")
 from app.services.email_service import send_otp_email
+print("AUTH STEP 7")
 from app.utils.password import hash_password, verify_password
+print("AUTH STEP 8")
 from app.utils.jwt_handler import create_access_token
+print("AUTH STEP 9")
 from app.utils.auth_dependency import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
