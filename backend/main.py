@@ -65,3 +65,29 @@ def test_database():
             "status": "error",
             "message": str(e)
         }
+
+import google.generativeai as genai
+
+@app.get("/models")
+def list_models():
+    models = []
+
+    for model in genai.list_models():
+        models.append({
+            "name": model.name,
+            "methods": model.supported_generation_methods
+        })
+
+    return models
+
+
+@app.get("/test-embedding")
+def test_embedding():
+
+    from app.utils.embeddings import get_embedding
+
+    embedding = get_embedding("Hello world")
+
+    return {
+        "length": len(embedding)
+    }
